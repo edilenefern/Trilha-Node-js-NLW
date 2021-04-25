@@ -5,12 +5,13 @@ import { UsersRepository } from "../repositories/UsersRepository";
 class UsersService {
   async create( email: string) {
     const usersRepository = getCustomRepository(UsersRepository);
+    // Verificar se usuário existe
 
-    // Select * from settings where username = "username" limit 1;
     const userExists = await usersRepository.findOne({
         email
     });
 
+    // Se existir,retorna user
     if (userExists) {
         return userExists;
     }
@@ -22,6 +23,7 @@ class UsersService {
 
     await usersRepository.save(user);
 
+    // Se não existir,salvar no DB
     return user;
   }
 }
