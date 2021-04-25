@@ -8,6 +8,12 @@ const routes = Router();
 
 const settingsController = new SettingsController();
 
+
+
+ routes.post("/settings", settingsController.create);
+
+export { routes };
+
 /**
  * Tipos de parametros
  * Routes Params => parametros de rotas
@@ -18,7 +24,3 @@ const settingsController = new SettingsController();
  * Body params => {
  * }
  */
-
- routes.post("/settings", settingsController.create);
-
-export { routes };
