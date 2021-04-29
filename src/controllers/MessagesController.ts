@@ -19,4 +19,4 @@ async create(request: Request, response: Response) {
     }
 }
 
-export { MessagesController}
+export { MessagesController }

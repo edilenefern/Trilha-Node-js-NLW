@@ -20,3 +20,7 @@ class User {
 }
 
 export { User };
+
+// Comamdos:
+// Para criar a migration: yarn typeorm migration:create -n nome da tabela
+// Para executar a migration: yarn typeorm migration:run
