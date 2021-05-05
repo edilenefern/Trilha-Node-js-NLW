@@ -1,12 +1,13 @@
 import { getCustomRepository, Repository } from "typeorm";
 import { Setting } from "../entities/Setting";
 import { SettingsRepository } from "../repositories/SettingsRepository";
+
 interface ISettingsCreate {
   chat: boolean;
   username: string;
 }
 
-// Quando tiver mais de um método,criar um atributo dentro da nossa classe e 
+// Quando tiver mais de um método,criar um atributo dentro da nossa classe e
 // todos os métodos dentro da classe vai chamar esse atributo
 
 class SettingsService {
@@ -17,15 +18,14 @@ class SettingsService {
   }
 
   async create({ chat, username }: ISettingsCreate) {
-  // Select * from settings where username = "username" limit 1;
+    // Select * from settings where username = "username" limit 1;
     const userAlreadyExists = await this.settingsRepository.findOne({
-        username,
+      username,
     });
 
     if (userAlreadyExists) {
-        throw new Error("User already exists!");
+      throw new Error("User already exists!");
     }
-
 
     const settings = this.settingsRepository.create({
       chat,
@@ -36,13 +36,26 @@ class SettingsService {
 
     return settings;
   }
+  async findByUsername(username: string) {
+    const settings = await this.settingsRepository.findOne({
+      username,
+    });
+    return settings;
+  }
+
+  async update(username: string, chat: boolean) {
+    await this.settingsRepository
+      .createQueryBuilder()
+      .update(Setting)
+      .set({ chat })
+      .where("username = :username", {
+        username,
+      })
+      .execute();
+  }
 }
 
-
-
 export { SettingsService };
-
-
 
 // class SettingsService {
 //   async create({ chat, username }: ISettingsCreate) {
@@ -57,12 +70,9 @@ export { SettingsService };
 //         throw new Error("User already exists!");
 //     }
 
-
 //     const settings = settingsRepository.create({
 //       chat,
 //       username,
 //     });
 
 //     await settingsRepository.save(settings);
-
- 

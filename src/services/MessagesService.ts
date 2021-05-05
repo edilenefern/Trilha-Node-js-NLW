@@ -2,68 +2,63 @@ import { getCustomRepository, Repository } from "typeorm";
 import { Message } from "../entities/Message";
 import { MessagesRepository } from "../repositories/MessagesRepository";
 
-
 interface IMessageCreate {
-    admin_id?: string;
-    text: string;
-    user_id: string;
+  admin_id?: string;
+  text: string;
+  user_id: string;
 }
 
-
-// Quando tiver mais de um método,criar um atributo dentro da nossa classe e 
+// Quando tiver mais de um método,criar um atributo dentro da nossa classe e
 // todos os métodos dentro da classe vai chamar esse atributo
 class MessagesService {
-    private messagesRepository: Repository<Message>;
+  private messagesRepository: Repository<Message>;
 
-    constructor(){
-        this.messagesRepository = getCustomRepository(MessagesRepository);
-    }
+  constructor() {
+    this.messagesRepository = getCustomRepository(MessagesRepository);
+  }
 
-    async create({ admin_id, text, user_id }: IMessageCreate) {
+  async create({ admin_id, text, user_id }: IMessageCreate) {
+    const message = this.messagesRepository.create({
+      admin_id,
+      text,
+      user_id,
+    });
 
-        const message = this.messagesRepository.create({
-            admin_id,
-            text,
-            user_id,
-        });
+    await this.messagesRepository.save(message);
 
-        await this.messagesRepository.save(message);
-        
-        return message;
-    }
+    return message;
+  }
 
-    async listByUser(user_id: string) {
-        const messagesRepository = getCustomRepository(MessagesRepository);
+  async listByUser(user_id: string) {
+    const list = await this.messagesRepository.find({
+      where: { user_id },
+      relations: ["user"],
+    });
+    // class MessagesService {
+    //     async create({ admin_id, text, user_id }: IMessageCreate) {
+    //         const messagesRepository = getCustomRepository(MessagesRepository);
 
-        const list = await this.messagesRepository.find({
-          where:{  user_id },
-          relations: ["user"],
-        });
-// class MessagesService {
-//     async create({ admin_id, text, user_id }: IMessageCreate) {
-//         const messagesRepository = getCustomRepository(MessagesRepository);
+    //         const message = messagesRepository.create({
+    //             admin_id,
+    //             text,
+    //             user_id,
+    //         });
 
-//         const message = messagesRepository.create({
-//             admin_id,
-//             text,
-//             user_id,
-//         });
+    //         await messagesRepository.save(message);
 
-//         await messagesRepository.save(message);
-        
-//         return message;
-//     }
+    //         return message;
+    //     }
 
-//     async listByUser(user_id: string) {
-//         const messagesRepository = getCustomRepository(MessagesRepository);
+    //     async listByUser(user_id: string) {
+    //         const messagesRepository = getCustomRepository(MessagesRepository);
 
-//         const list = await messagesRepository.find({
-//           where:{  user_id },
-//           relations: ["user"],
-//         });
+    //         const list = await messagesRepository.find({
+    //           where:{  user_id },
+    //           relations: ["user"],
+    //         });
 
-        return list;
-    }
+    return list;
+  }
 }
 
 export { MessagesService };

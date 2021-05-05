@@ -6,6 +6,7 @@ import {
 } from "typeorm";
 
 export class CreateConnections1619938892431 implements MigrationInterface {
+   
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
